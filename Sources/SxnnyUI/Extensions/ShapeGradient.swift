@@ -53,6 +53,17 @@ extension ShapeStyle where Self == LinearGradient {
         )
     }
     
+    public static var invertblackTextGradient: LinearGradient {
+        return LinearGradient(
+            gradient: Gradient(colors: [
+                Color.black,
+                Color.gray
+            ]),
+            startPoint: .topTrailing,
+            endPoint: .bottomLeading
+        )
+    }
+    
     public static var backgroundGradient: LinearGradient {
         return LinearGradient(
             gradient: Gradient(colors: [
