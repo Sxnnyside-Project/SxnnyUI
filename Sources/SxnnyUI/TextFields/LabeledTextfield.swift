@@ -29,7 +29,7 @@ public struct LabeledTextfield: View {
                     Spacer()
                     Text(placeholder)
                         .foregroundColor(.gray)
-                        .padding(.trailing, 10)
+                        .padding(.trailing, 20)
                 }
             )
     }
