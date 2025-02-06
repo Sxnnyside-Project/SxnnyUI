@@ -64,10 +64,54 @@ extension ShapeStyle where Self == LinearGradient {
         )
     }
     
-    public static var backgroundGradient: LinearGradient {
+    public static var whiteTextGradient: LinearGradient {
+        return LinearGradient(
+            gradient: Gradient(colors: [
+                Color.white,
+                Color.gray
+            ]),
+            startPoint: .topLeading,
+            endPoint: .bottomLeading
+        )
+    }
+    
+    public static var invertwhiteTextGradient: LinearGradient {
+        return LinearGradient(
+            gradient: Gradient(colors: [
+                Color.white,
+                Color.gray
+            ]),
+            startPoint: .topTrailing,
+            endPoint: .bottomTrailing
+        )
+    }
+    
+    public static var bluebackgroundGradient: LinearGradient {
         return LinearGradient(
             gradient: Gradient(colors: [
                 Color(hex: "#BDEEFB").opacity(0.8),
+                Color.clear
+            ]),
+            startPoint: .top,
+            endPoint: .bottom
+        )
+    }
+    
+    public static var indigobackgroundGradient: LinearGradient {
+        return LinearGradient(
+            gradient: Gradient(colors: [
+                Color.indigo.opacity(0.8),
+                Color.clear
+            ]),
+            startPoint: .top,
+            endPoint: .bottom
+        )
+    }
+    
+    public static var graybackgroundGradient: LinearGradient {
+        return LinearGradient(
+            gradient: Gradient(colors: [
+                Color(hex: "#F0F0F0").opacity(0.8),
                 Color.clear
             ]),
             startPoint: .top,

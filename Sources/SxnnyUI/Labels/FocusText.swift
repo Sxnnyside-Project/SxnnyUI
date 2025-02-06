@@ -10,7 +10,7 @@ import SwiftUI
 @available(iOS 13.0, *)
 public struct FocusText<Content: View>: View {
     let content: Content
-    var backgroundColor: Color = .blue
+    var backgroundColor: Color = .accentColor
     var cornerRadius: CGFloat = 10
     var shadowColor: Color = .gray
     var shadowRadius: CGFloat = 5
