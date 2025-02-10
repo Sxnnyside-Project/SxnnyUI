@@ -86,6 +86,17 @@ extension ShapeStyle where Self == LinearGradient {
         )
     }
     
+    public static var invertpinkTextGradient: LinearGradient {
+        return LinearGradient(
+            gradient: Gradient(colors: [
+                Color.red.opacity(0.8),
+                Color.pink
+            ]),
+            startPoint: .topTrailing,
+            endPoint: .bottomLeading
+        )
+    }
+    
     public static var bluebackgroundGradient: LinearGradient {
         return LinearGradient(
             gradient: Gradient(colors: [
@@ -101,6 +112,17 @@ extension ShapeStyle where Self == LinearGradient {
         return LinearGradient(
             gradient: Gradient(colors: [
                 Color.indigo.opacity(0.8),
+                Color.clear
+            ]),
+            startPoint: .top,
+            endPoint: .bottom
+        )
+    }
+    
+    public static var pinkbackgroundGradient: LinearGradient {
+        return LinearGradient(
+            gradient: Gradient(colors: [
+                Color.pink.opacity(0.8),
                 Color.clear
             ]),
             startPoint: .top,
