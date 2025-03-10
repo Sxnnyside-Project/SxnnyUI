@@ -22,14 +22,16 @@ public class AlertManager: ObservableObject {
 
 public struct AlertView: View {
     @ObservedObject public var alertManager: AlertManager
+    private var title: String = "Advertencia"
+    private var color: Color = .yellow
 
     public var body: some View {
         if alertManager.showAlert {
             VStack(spacing: 16) {
                 HStack {
                     Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundColor(.yellow)
-                    Text("Advertencia")
+                        .foregroundColor(color)
+                    Text(title)
                         .font(.headline)
                         .fontWeight(.bold)
                     Spacer()
@@ -53,6 +55,17 @@ public struct AlertView: View {
     }
     
     public init(alertManager: AlertManager) {
+        self.alertManager = alertManager
+    }
+    
+    public init(_ title: String, alertManager: AlertManager) {
+        self.title = title
+        self.alertManager = alertManager
+    }
+    
+    public init(_ title: String, _ color: Color, alertManager: AlertManager) {
+        self.title = title
+        self.color = color
         self.alertManager = alertManager
     }
 }
