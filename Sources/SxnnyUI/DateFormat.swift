@@ -47,3 +47,34 @@ public struct DateFormat {
         return components.joined(separator: " ")
     }
 }
+
+public struct PhoneFormat {
+    public static func formatPhoneNumber(_ phoneNumber: String) -> String {
+        let phoneNumberRegex = "[2-9]\\d{2}\\d{3}\\d{4}|860\\d{9}"
+        guard phoneNumber.range(of: phoneNumberRegex, options: .regularExpression, range: nil, locale: nil) != nil else {
+            return phoneNumber
+        }
+        
+        var formattedPhoneNumber = ""
+        var index = phoneNumber.startIndex
+
+        // Append the area code in parentheses
+        formattedPhoneNumber.append("(")
+        formattedPhoneNumber.append(contentsOf: phoneNumber[index...phoneNumber.index(index, offsetBy: 2)])
+        formattedPhoneNumber.append(") ")
+        index = phoneNumber.index(index, offsetBy: 3)
+
+        // Append the first three digits with a space
+        formattedPhoneNumber.append(contentsOf: phoneNumber[index...phoneNumber.index(index, offsetBy: 2)])
+        formattedPhoneNumber.append(" ")
+        index = phoneNumber.index(index, offsetBy: 3)
+
+        // Append the last four digits with a dash
+        formattedPhoneNumber.append(contentsOf: phoneNumber[index...phoneNumber.index(index, offsetBy: 3)])
+        index = phoneNumber.index(index, offsetBy: 4)
+
+        // Append the final part of the number
+        formattedPhoneNumber.append(contentsOf: phoneNumber[index...])
+        return formattedPhoneNumber
+    }
+}
