@@ -16,8 +16,27 @@ public enum FontWeightPickerStyle {
     case palette
 }
 
+public enum FontWeightOptions: CaseIterable {
+    case ultralight, thin, light, regular, medium, semibold, bold, heavy, black
+
+    public var fontWeight: Font.Weight {
+        switch self {
+        case .ultralight: return .ultraLight
+        case .thin: return .thin
+        case .light: return .light
+        case .regular: return .regular
+        case .medium: return .medium
+        case .semibold: return .semibold
+        case .bold: return .bold
+        case .heavy: return .heavy
+        case .black: return .black
+        }
+    }
+}
+
 public class FontWeightViewModel: ObservableObject {
     @Published public var selectedFontWeight: Font.Weight = .regular
+    @Published public var selected: FontWeightOptions = .regular
 
     public init() {}
 }
@@ -37,6 +56,48 @@ public struct FontWeightPicker: View {
             ForEach(fontWeights.indices, id: \.self) { index in
                 Image(systemName: fontWeightIcons[index])
                     .tag(fontWeights[index])
+            }
+        }
+    }
+}
+
+public struct LimitedFontWeights {
+    private let values: [FontWeightOptions]
+
+    public init(_ values: [FontWeightOptions]) {
+        precondition(values.count == 3 || values.count == 5, "FontWeights must have exactly 3 or 5 elements.")
+        self.values = values
+    }
+
+    public var weights: [FontWeightOptions] {
+        values
+    }
+}
+
+public struct FontWeightPickerCustom: View {
+    @ObservedObject private var fwViewModel: FontWeightViewModel
+    private let fontWeights: LimitedFontWeights
+    private let fontWeightIcons: [String]
+
+    public init(
+        fwViewModel: FontWeightViewModel,
+        fontWeights: LimitedFontWeights = LimitedFontWeights([.light, .regular, .bold]),
+        fontWeightIcons: [String] = ["textformat.size.smaller", "textformat.size", "textformat.size.larger"]
+    ) {
+        guard fontWeightIcons.count == fontWeights.weights.count else {
+            fatalError("fontWeightIcons array must match the number of fontWeights.")
+        }
+
+        self.fwViewModel = fwViewModel
+        self.fontWeights = fontWeights
+        self.fontWeightIcons = fontWeightIcons
+    }
+
+    public var body: some View {
+        Picker(selection: $fwViewModel.selected, label: Text("Font Weight")) {
+            ForEach(fontWeights.weights.indices, id: \.self) { index in
+                Image(systemName: fontWeightIcons[index])
+                    .tag(fontWeights.weights[index])
             }
         }
     }

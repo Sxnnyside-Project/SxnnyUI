@@ -1,23 +1,26 @@
 //
-//  FitIconButton.swift
+//  IconButton.swift
 //  SxnnyUI
 //
-//  Created by Sxnnyside Proyect on 21/01/25.
+//  Created by TI on 31/03/25.
 //
 
 import SwiftUI
 
-public struct FitIconButton: View {
+public struct IconButton: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
     public let action: () -> Void
     public let iconName: String
     public let label: String
+    public let additional: String
+    public let contentMode: ContentMode = .fit
     public let isSelected: Bool
     
-    public init(action: @escaping () -> Void, iconName: String, label: String, isSelected: Bool) {
+    public init(action: @escaping () -> Void, iconName: String, label: String, additional: String = "", isSelected: Bool, contentMode: ContentMode = .fit) {
         self.action = action
         self.iconName = iconName
         self.label = label
+        self.additional = additional
         self.isSelected = isSelected
     }
     
@@ -33,12 +36,12 @@ public struct FitIconButton: View {
                 if let uiImage = UIImage(named: iconName) {
                     Image(uiImage: uiImage)
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
+                        .aspectRatio(contentMode: contentMode)
                         .frame(height: iconSize)
                 } else {
                     Image(systemName: iconName)
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
+                        .aspectRatio(contentMode: contentMode)
                         .symbolRenderingMode(.hierarchical)
                         .frame(height: iconSize)
                 }

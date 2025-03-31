@@ -13,12 +13,14 @@ public struct ShadowedRoundedButton: View {
     public let systemImage: String
     public let backgroundColor: Color
     public let action: () -> Void
+    public let disabled: Bool
 
-    public init(label: String, systemImage: String, backgroundColor: Color, action: @escaping () -> Void) {
+    public init(label: String, systemImage: String, backgroundColor: Color, action: @escaping () -> Void, disabled: Bool = false) {
         self.label = label
         self.systemImage = systemImage
         self.backgroundColor = backgroundColor
         self.action = action
+        self.disabled = disabled
     }
     
     public var body: some View {
@@ -30,7 +32,7 @@ public struct ShadowedRoundedButton: View {
                     .fontWeight(.bold)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(backgroundColor)
+                    .background(disabled ? Color.gray : backgroundColor)
                     .cornerRadius(10)
                     .shadow(color: .gray, radius: 5, x: 0, y: 5)
                     .padding(.horizontal)
@@ -40,12 +42,13 @@ public struct ShadowedRoundedButton: View {
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(backgroundColor)
+                    .background(disabled ? Color.gray : backgroundColor)
                     .cornerRadius(10)
                     .shadow(color: .gray, radius: 5, x: 0, y: 5)
                     .padding(.horizontal)
             }
         }
+        .disabled(disabled)
         .buttonStyle(.borderless)
     }
 }

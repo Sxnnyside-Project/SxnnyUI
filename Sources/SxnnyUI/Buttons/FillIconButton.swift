@@ -8,6 +8,7 @@
 import SwiftUI
 
 public struct FillIconButton: View {
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
     public let action: () -> Void
     public let iconName: String
     public let label: String
@@ -21,6 +22,11 @@ public struct FillIconButton: View {
     }
     
     public var body: some View {
+        let buttonWidth: CGFloat = horizontalSizeClass == .compact ? 150 : 400
+        let buttonHeight: CGFloat = horizontalSizeClass == .compact ? 170 : 370
+        let buttonMinHeight: CGFloat = horizontalSizeClass == .compact ? 145 : 200
+        let fontColor: Color = horizontalSizeClass == .compact ? .black : .clear
+        
         Button(action: action) {
             VStack {
                 if let uiImage = UIImage(named: iconName) {
@@ -31,7 +37,7 @@ public struct FillIconButton: View {
                 } else {
                     Image(systemName: iconName)
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
+                        .aspectRatio(contentMode: .fill)
                         .symbolRenderingMode(.hierarchical)
                         .frame(height: 80)
                 }
@@ -42,9 +48,9 @@ public struct FillIconButton: View {
                     .fixedSize(horizontal: false, vertical: true)
                     .multilineTextAlignment(.center)
             }
-            .foregroundStyle(.black)
+            .foregroundStyle(fontColor)
         }
-        .frame(maxWidth: 150, minHeight: 145, maxHeight: 170)
+        .frame(maxWidth: buttonWidth, minHeight: buttonMinHeight, maxHeight: buttonHeight)
         .buttonStyle(.borderless)
         .background(isSelected ? .selectedButtonGradient : .buttonGradient)
         .cornerRadius(15)

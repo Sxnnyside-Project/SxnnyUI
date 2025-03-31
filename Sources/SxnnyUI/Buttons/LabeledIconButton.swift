@@ -10,6 +10,7 @@ import SwiftUI
 
 @available(iOS 16.0, *)
 public struct LabeledIconButton: View {
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
     public let action: () -> Void
     public let iconName: String
     public let label: String
@@ -25,6 +26,9 @@ public struct LabeledIconButton: View {
     }
     
     public var body: some View {
+        let buttonWidth: CGFloat = horizontalSizeClass == .compact ? 150 : 400
+        let buttonHeight: CGFloat = horizontalSizeClass == .compact ? 170 : 600
+        
         Button(action: action) {
             VStack(alignment: .center) {
                 if let uiImage = UIImage(named: iconName) {
@@ -62,7 +66,7 @@ public struct LabeledIconButton: View {
             }
             .foregroundStyle(.black)
         }
-        .frame(maxWidth: 150, minHeight: 145, maxHeight: 170)
+        .frame(maxWidth: buttonWidth, minHeight: 145, maxHeight: buttonHeight)
         .buttonStyle(.borderless)
         .background(isSelected ? .selectedButtonGradient : .buttonGradient)
         .cornerRadius(15)
