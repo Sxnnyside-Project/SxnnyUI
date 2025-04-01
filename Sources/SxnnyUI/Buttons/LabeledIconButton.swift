@@ -9,6 +9,7 @@
 import SwiftUI
 
 @available(iOS 16.0, *)
+@available(*, deprecated, message: "Use SxnnyUI.IconButton instead")
 public struct LabeledIconButton: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
     public let action: () -> Void
@@ -17,6 +18,7 @@ public struct LabeledIconButton: View {
     public let footnote: String
     public let isSelected: Bool
     
+    @available(*, deprecated, message: "Use SxnnyUI.IconButton instead")
     public init(action: @escaping () -> Void, iconName: String, label: String, footnote: String, isSelected: Bool) {
         self.action = action
         self.iconName = iconName

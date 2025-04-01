@@ -64,4 +64,3 @@ extension FocusText {
         return copy
     }
 }
-

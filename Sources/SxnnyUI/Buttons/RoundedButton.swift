@@ -14,8 +14,8 @@ public struct RoundedButton: View {
     public let backgroundColor: Color
     public let action: () -> Void
     public let disabled: Bool
-
-    public init(label: String, systemImage: String, backgroundColor: Color, action: @escaping () -> Void, disabled: Bool = false) {
+    
+    public init(label: String, systemImage: String, backgroundColor: Color, disabled: Bool = false, action: @escaping () -> Void) {
         self.label = label
         self.systemImage = systemImage
         self.backgroundColor = backgroundColor
