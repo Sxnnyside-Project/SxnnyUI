@@ -8,6 +8,12 @@
 import Foundation
 
 public struct DateFormat {
+    public static func formatDateFlat(date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "ddMMyyyyHHmmss"
+        return formatter.string(from: date)
+    }
+    
     public static func formatDateWithSlash(date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd/MM/yyyy"
