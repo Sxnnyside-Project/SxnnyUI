@@ -7,21 +7,56 @@
 
 import UIKit
 
-/// Clase Logger para gestionar la generación de logs con un intervalo de tiempo específico.
+/// Logger class to manage log generation with specific time intervals and group-based identifiers.
 public class Logger {
-    private static let logInterval: TimeInterval = 60 // Cada 60 segundos
-    nonisolated(unsafe) private static var lastLogTime: Date = Date.distantPast
+    /// Default log interval in seconds.
+    public static let defaultLogInterval: TimeInterval = 60
+
+    /// A dictionary to store the last log time for each identifier.
+    nonisolated(unsafe) private static var lastLogTimes: [String: Date] = [:]
+
+    /// A serial queue to ensure thread safety.
     private static let queue = DispatchQueue(label: "com.example.LoggerQueue")
 
-    /// Registra un mensaje en la consola si ha pasado el intervalo de tiempo especificado desde el último log.
-    /// - Parameter message: El mensaje que se va a registrar.
-    public static func log(_ message: String) {
+    /// Logs a message with a specific identifier and interval.
+    ///
+    /// - Parameters:
+    ///   - message: The message to log.
+    ///   - identifier: The group identifier for the log (e.g., `[debug]`, `[error]`).
+    ///   - interval: The time interval in seconds to throttle logs for this identifier. Defaults to `defaultLogInterval`.
+    public static func log(_ message: String, identifier: String, interval: TimeInterval = defaultLogInterval) {
         queue.sync {
             let now = Date()
-            if now.timeIntervalSince(lastLogTime) > logInterval {
-                print(message)
-                lastLogTime = now
+            let lastLogTime = lastLogTimes[identifier] ?? Date.distantPast
+
+            if now.timeIntervalSince(lastLogTime) > interval {
+                print("\(identifier) \(message)")
+                lastLogTimes[identifier] = now
             }
+        }
+    }
+
+    /// Logs a message with the default interval. **Deprecated**: Use `log(_:identifier:interval:)` instead.
+    ///
+    /// - Parameter message: The message to log.
+    @available(*, deprecated, message: "Use log(_:identifier:interval:) instead.")
+    public static func log(_ message: String) {
+        log(message, identifier: "[default]")
+    }
+
+    /// Resets the timer for a specific identifier.
+    ///
+    /// - Parameter identifier: The group identifier whose timer should be reset.
+    public static func resetTimer(for identifier: String) {
+        queue.sync {
+            lastLogTimes[identifier] = Date.distantPast
+        }
+    }
+
+    /// Clears all timers for all identifiers.
+    public static func clearAllTimers() {
+        queue.sync {
+            lastLogTimes.removeAll()
         }
     }
 }

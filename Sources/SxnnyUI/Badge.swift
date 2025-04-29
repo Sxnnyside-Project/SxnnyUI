@@ -5,13 +5,20 @@
 //  Created by Sxnnyside Proyect on 21/01/25.
 //
 
-
 import SwiftUI
 
+/// A SwiftUI view that represents a badge, which can display either a count or an image.
+///
+/// The `Badge` view is typically used to indicate notifications, counts, or statuses
+/// by overlaying a small circular element on top of another view.
 struct Badge: View {
+    /// The count to display inside the badge. If `nil`, the badge will display an image instead.
     var count: Int?
+
+    /// The name of the system image to display inside the badge. Used if `count` is `nil`.
     var imageName: String?
 
+    /// The content and layout of the badge.
     var body: some View {
         ZStack {
             Circle()
@@ -32,10 +39,18 @@ struct Badge: View {
     }
 }
 
+/// A view modifier that overlays a badge on top of another view.
+///
+/// The `BadgeModifier` allows you to add a badge to any SwiftUI view by specifying
+/// either a count or an image.
 struct BadgeModifier: ViewModifier {
+    /// The count to display inside the badge. If `nil`, the badge will display an image instead.
     var count: Int?
+
+    /// The name of the system image to display inside the badge. Used if `count` is `nil`.
     var imageName: String?
 
+    /// Modifies the content view by overlaying a badge.
     func body(content: Content) -> some View {
         ZStack(alignment: .topTrailing) {
             content
@@ -47,6 +62,15 @@ struct BadgeModifier: ViewModifier {
 }
 
 extension View {
+    /// Adds a badge to the view.
+    ///
+    /// Use this method to overlay a badge on any SwiftUI view. The badge can display
+    /// either a count or an image.
+    ///
+    /// - Parameters:
+    ///   - count: The count to display inside the badge. If `nil`, the badge will display an image instead.
+    ///   - imageName: The name of the system image to display inside the badge. Used if `count` is `nil`.
+    /// - Returns: A view with the badge overlay.
     public func badge(count: Int? = nil, imageName: String? = nil) -> some View {
         self.modifier(BadgeModifier(count: count, imageName: imageName))
     }

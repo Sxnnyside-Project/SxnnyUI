@@ -8,46 +8,78 @@
 import SwiftUI
 import Combine
 
-/// Clase que se encarga de gestionar el control de alertas
-public final class AlertManager: ObservableObject {
-    @Published fileprivate var alertShowing: Bool = false
-    @Published fileprivate var alertMessage: String = ""
-    
-    public var isAlertShowing: Bool {
-        return alertShowing
-    }
+/// Represents the state of an alert, including its visibility and message.
+public struct AlertState {
+    public var isShowing: Bool
+    public var message: String
+    public var type: AlertType
 
-    public var currentAlertMessage: String {
-        return alertMessage
-    }
-    
-    public init() {}
-
-    public func showAlert(message: String) {
-        alertMessage = message
-        alertShowing = true
-    }
-
-    public func dismissAlert() {
-        alertMessage = ""
-        alertShowing = false
+    public init(isShowing: Bool = false, message: String = "", type: AlertType = .info) {
+        self.isShowing = isShowing
+        self.message = message
+        self.type = type
     }
 }
 
-/// Vista de alerta que se encarga de mostrar un mensaje personalizable
+// Enum representing different types of alerts.
+public enum AlertType {
+    case info
+    case success
+    case warning
+    case error
+}
+
+/// Manages the state and behavior of alerts.
+public final class AlertManager: ObservableObject {
+    @Published private(set) var alertState: AlertState = AlertState()
+
+    private let queue = DispatchQueue(label: "com.example.AlertManagerQueue")
+
+    public init() {}
+
+    /// Shows an alert with a specific message and type.
+    ///
+    /// - Parameters:
+    ///   - message: The message to display in the alert.
+    ///   - type: The type of the alert (e.g., `.info`, `.error`).
+    public func showAlert(message: String, type: AlertType = .info) {
+        queue.sync {
+            alertState = AlertState(isShowing: true, message: message, type: type)
+        }
+    }
+    
+    /// Returns the current alert showing state.
+    public func isShowing() -> Bool {
+        queue.sync {
+            return alertState.isShowing
+        }
+    }
+
+    /// Dismisses the currently displayed alert.
+    public func dismissAlert() {
+        queue.sync {
+            alertState = AlertState()
+        }
+    }
+}
+
+/// A customizable alert view for displaying messages with optional actions.
 public struct AlertView: View {
     @ObservedObject public var alertManager: AlertManager
     @Environment(\.colorScheme) var colorScheme: ColorScheme
-    
-    private var title: String = "Advertencia"
-    private var icon: String = "exclamationmark.triangle.fill"
-    private var color: Color = .yellow
-    private var alertColor: Color {
+
+    private var title: String
+    private var icon: String
+    private var color: Color
+    private var buttonLabel: String
+    private var buttonAction: (() -> Void)?
+
+    private var alertBackgroundColor: Color {
         return colorScheme == .dark ? .black : .white
     }
-    
+
     public var body: some View {
-        if alertManager.alertShowing {
+        if alertManager.alertState.isShowing {
             VStack(spacing: 16) {
                 HStack {
                     Image(systemName: icon)
@@ -58,78 +90,53 @@ public struct AlertView: View {
                     Spacer()
                 }
 
-                GroupBox {
-                    Text(alertManager.alertMessage)
+                ScrollView {
+                    Text(alertManager.alertState.message)
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
-                Button("OK") {
+                Button(buttonLabel) {
+                    buttonAction?()
                     alertManager.dismissAlert()
                 }
                 .padding(.top, 10)
+                .buttonStyle(.borderedProminent)
             }
             .padding()
-            .background(RoundedRectangle(cornerRadius: 15).fill(alertColor.opacity(0.9)))
+            .background(RoundedRectangle(cornerRadius: 15).fill(alertBackgroundColor.opacity(0.9)))
             .frame(maxWidth: 300)
             .padding()
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("\(title), \(alertManager.alertState.message)")
+            .transition(.opacity)
+            .animation(.easeInOut, value: alertManager.alertState.isShowing)
         }
     }
-    
-    /// Crea una instancia con los valores predeterminados
-    /// - Parameter alertManager: Instancia de AlertManager
-    public init(alertManager: AlertManager) {
-        self.alertManager = alertManager
-    }
-    
-    /// Crea una instancia con titulo personalizado
+
+    /// Initializes the alert view with customizable options.
+    ///
     /// - Parameters:
-    ///   - title: Titulo de la alerta
-    ///   - alertManager: Instancia de AlertManager
-    public init(_ title: String, alertManager: AlertManager) {
+    ///   - title: The title of the alert.
+    ///   - icon: The system image name for the alert icon.
+    ///   - color: The color of the alert icon.
+    ///   - buttonLabel: The label for the action button.
+    ///   - buttonAction: The action to perform when the button is tapped.
+    ///   - alertManager: The `AlertManager` instance managing the alert state.
+    public init(
+        title: String = "Alert",
+        icon: String = "exclamationmark.triangle.fill",
+        color: Color = .yellow,
+        buttonLabel: String = "OK",
+        buttonAction: (() -> Void)? = nil,
+        alertManager: AlertManager
+    ) {
         self.title = title
-        self.alertManager = alertManager
-    }
-    
-    /// Crea una instancia con color de icono personalizado
-    /// - Parameters:
-    ///   - color: Color del icono de la alerta
-    ///   - alertManager: Instancia de AlertManager
-    public init(_ color: Color, alertManager: AlertManager) {
-        self.color = color
-        self.alertManager = alertManager
-    }
-    
-    /// Crea una instancia con titulo e color de icono personalizado
-    /// - Parameters:
-    ///   - title: Titulo de la alerta
-    ///   - color: Color del icono de la alerta
-    ///   - alertManager: Instancia de AlertManager
-    public init(_ title: String, _ color: Color, alertManager: AlertManager) {
-        self.title = title
-        self.color = color
-        self.alertManager = alertManager
-    }
-    
-    /// Crea una instancia con titulo e icono personalizado
-    /// - Parameters:
-    ///   - icon: Icono de la alerta
-    ///   - title: Titulo de la alerta
-    ///   - alertManager: Instancia de AlertManager
-    public init(_ title: String, _ icon: String, alertManager: AlertManager) {
         self.icon = icon
-        self.title = title
-        self.alertManager = alertManager
-    }
-    
-    /// Crea una instancia con los valores personalizados
-    /// - Parameters:
-    ///   - title:Icono de la alerta
-    ///   - icon: Titulo de la alerta
-    ///   - color: Color del icono de la alerta
-    ///   - alertManager: Instancia de AlertManager
-    public init(_ title: String, _ icon: String, _ color: Color, alertManager: AlertManager) {
-        self.icon = icon
-        self.title = title
         self.color = color
+        self.buttonLabel = buttonLabel
+        self.buttonAction = buttonAction
         self.alertManager = alertManager
     }
 }
+
