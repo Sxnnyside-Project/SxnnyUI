@@ -8,7 +8,8 @@
 import SwiftUI
 
 extension Color {
-    // Inicialización con valor hexadecimal
+    /// Initializes a `Color` instance using a hexadecimal string.
+    /// - Parameter hex: A string representing the hexadecimal color value (e.g., `"#FF5733"` or `"FF5733"`).
     public init(hex: String) {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         var rgbValue: UInt64 = 0
@@ -19,17 +20,20 @@ extension Color {
         self.init(red: red, green: green, blue: blue)
     }
 
-    // Inicialización con RGB
+    /// Initializes a `Color` instance using RGB values.
+    /// - Parameter rgb: A tuple containing red, green, and blue values (0-255).
     public init(rgb: (red: Double, green: Double, blue: Double)) {
         self.init(red: rgb.red / 255.0, green: rgb.green / 255.0, blue: rgb.blue / 255.0)
     }
 
-    // Inicialización con RGBA
+    /// Initializes a `Color` instance using RGBA values.
+    /// - Parameter rgba: A tuple containing red, green, blue (0-255), and alpha (0-1) values.
     public init(rgba: (red: Double, green: Double, blue: Double, alpha: Double)) {
         self.init(red: rgba.red / 255.0, green: rgba.green / 255.0, blue: rgba.blue / 255.0, opacity: rgba.alpha)
     }
 
-    // Inicialización con CMYK
+    /// Initializes a `Color` instance using CMYK values.
+    /// - Parameter cmyk: A tuple containing cyan, magenta, yellow, and black values (0-1).
     public init(cmyk: (cyan: Double, magenta: Double, yellow: Double, black: Double)) {
         let red = (1.0 - cmyk.cyan) * (1.0 - cmyk.black)
         let green = (1.0 - cmyk.magenta) * (1.0 - cmyk.black)

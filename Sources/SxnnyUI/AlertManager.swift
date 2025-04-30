@@ -81,20 +81,19 @@ public struct AlertView: View {
     public var body: some View {
         if alertManager.alertState.isShowing {
             VStack(spacing: 16) {
-                HStack {
-                    Image(systemName: icon)
-                        .foregroundStyle(color)
-                    Text(title)
-                        .font(.headline)
-                        .fontWeight(.bold)
-                    Spacer()
-                }
-
-                ScrollView {
+                GroupBox(content: {
                     Text(alertManager.alertState.message)
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                }
+                }, label: {
+                    HStack {
+                        Image(systemName: icon)
+                            .foregroundStyle(color)
+                        Text(title)
+                            .font(.headline)
+                            .fontWeight(.bold)
+                    }
+                })
 
                 Button(buttonLabel) {
                     buttonAction?()

@@ -5,9 +5,9 @@
 //  Created by Sxnnyside Proyect on 21/01/25.
 //
 
-
 import SwiftUI
 
+@available(*, deprecated, message: "Use SxnnyUI.RoundedButton instead")
 public struct ShadowedRoundedButton: View {
     public let label: String
     public let systemImage: String

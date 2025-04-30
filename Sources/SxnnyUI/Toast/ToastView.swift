@@ -8,39 +8,49 @@
 
 import SwiftUI
 
+/// A view that represents a toast message.
+///
+/// The `ToastView` displays a message with a specific style and optional width.
+/// It also supports an optional action for dismissing the toast.
 public struct ToastView: View {
-      var style: ToastStyle
-      var message: String
-      var width = CGFloat.infinity
-      var onCancelTapped: (() -> Void)
-      
-      public var body: some View {
-        HStack(alignment: .center, spacing: 12) {
-          Image(systemName: style.iconFileName)
-            .foregroundColor(style.themeColor)
-          Text(message)
-                .font(Font.callout)
-                .fontWeight(.black)
-                .foregroundColor(.black)
-          
-          Spacer(minLength: 10)
-          
-          Button {
-            onCancelTapped()
-          } label: {
-            Image(systemName: "xmark")
-              .foregroundColor(style.themeColor)
-          }
+  /// The style of the toast, defining its appearance.
+  var style: ToastStyle
+
+  /// The message displayed in the toast.
+  var message: String
+
+  /// The width of the toast. Defaults to `.infinity`.
+  var width: Double = .infinity
+
+  /// An optional action to be executed when the toast is dismissed.
+  var onDismiss: (() -> Void)?
+
+  public var body: some View {
+    HStack {
+      Image(systemName: style.iconFileName)
+        .foregroundColor(.white)
+        .padding(.leading, 8)
+
+      Text(message)
+        .foregroundColor(.white)
+        .font(.body)
+        .multilineTextAlignment(.leading)
+        .padding(.horizontal, 8)
+
+      Spacer()
+
+      if let onDismiss = onDismiss {
+        Button(action: onDismiss) {
+          Image(systemName: "xmark")
+            .foregroundColor(.white)
+            .padding(.trailing, 8)
         }
-        .padding()
-        .frame(minWidth: 0, maxWidth: width)
-        .background(Color.white)
-        .cornerRadius(8)
-        .overlay(
-          RoundedRectangle(cornerRadius: 8)
-            .opacity(0.6)
-            .background(style.themeColor.opacity(0.2))
-        )
-        .padding(.horizontal, 16)
       }
+    }
+    .frame(maxWidth: width)
+    .padding()
+    .background(style.themeColor)
+    .cornerRadius(8)
+    .shadow(radius: 4)
+  }
 }
