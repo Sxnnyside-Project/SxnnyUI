@@ -7,44 +7,58 @@
 
 import Foundation
 
-extension Bundle {
-    /// The display name of the app, as defined in the `CFBundleDisplayName` key of the Info.plist.
-    public var displayName: String? {
-        return object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
+public extension Bundle {
+    /// The display name of the app, as defined in the `CFBundleDisplayName` or `CFBundleName` key of the Info.plist.
+    var displayName: String {
+        object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
+        ?? object(forInfoDictionaryKey: "CFBundleName") as? String
+        ?? "Unknown"
     }
-    
+
     /// The version of the app, as defined in the `CFBundleShortVersionString` key of the Info.plist.
-    public var version: String? {
-        return object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+    var version: String {
+        object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
     }
-    
+
     /// The build number of the app, as defined in the `CFBundleVersion` key of the Info.plist.
-    public var build: String? {
-        return object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String
+    var build: String {
+        object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String ?? "1"
     }
-    
-    /// The Swift version used in the app, as defined in the `SwiftVersion` key of the Info.plist.
-    public var swiftVersion: String? {
-        return object(forInfoDictionaryKey: "SwiftVersion") as? String
+
+    /// The Swift version used in the app, as defined in the `SwiftVersion` key of the Info.plist (custom key).
+    var swiftVersion: String? {
+        object(forInfoDictionaryKey: "SwiftVersion") as? String
     }
-    
+
     /// The size of the app bundle on disk, formatted as a human-readable string.
-    public var appSize: String? {
-        let appDirectory = URL(fileURLWithPath: Bundle.main.bundlePath)
-        let appSize = appDirectory.directorySize
-        return ByteCountFormatter.string(fromByteCount: appSize, countStyle: .file)
+    var formattedAppSize: String {
+        let url = bundleURL
+        return ByteCountFormatter.string(fromByteCount: url.directorySize, countStyle: .file)
+    }
+
+    /// The size of the app bundle on disk in bytes.
+    var appSizeInBytes: Int64 {
+        bundleURL.directorySize
     }
 }
 
-extension URL {
-    /// The total size of the directory at the URL, including all its contents, in bytes.
-    public var directorySize: Int64 {
-        var size: Int64 = 0
-        if let enumerator = FileManager.default.enumerator(at: self, includingPropertiesForKeys: [.fileSizeKey], options: [], errorHandler: nil) {
+public extension URL {
+    /// Calculates the total size of the directory at the URL, including all its contents, in bytes.
+    var directorySize: Int64 {
+        guard isFileURL else { return 0 }
+
+        var totalSize: Int64 = 0
+        let fileManager = FileManager.default
+
+        if let enumerator = fileManager.enumerator(at: self, includingPropertiesForKeys: [.fileSizeKey], options: .skipsHiddenFiles) {
             for case let fileURL as URL in enumerator {
-                size += Int64((try? fileURL.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0) ?? 0)
+                if let fileSize = try? fileURL.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey]),
+                   fileSize.isRegularFile == true {
+                    totalSize += Int64(fileSize.fileSize ?? 0)
+                }
             }
         }
-        return size
+
+        return totalSize
     }
 }
