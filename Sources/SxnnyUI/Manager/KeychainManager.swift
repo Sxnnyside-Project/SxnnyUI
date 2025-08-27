@@ -2,13 +2,18 @@
 //  KeychainManager.swift
 //  SxnnyUI
 //
-//  Created by Sxnnyside Proyect on 21/01/25.
+//  Created by Sxnnyside Project on 21/01/25.
 //
 
 import Foundation
 import Security
 
 /// Errors that can occur during Keychain operations.
+///
+/// - dataConversionError: The provided data could not be converted to a format suitable for the Keychain (e.g., String to Data conversion failed).
+/// - itemNotFound: The requested item could not be found in the Keychain.
+/// - unexpectedData: The data retrieved from the Keychain was not in the expected format or could not be converted to the desired type.
+/// - unhandledError(status:): An unexpected OSStatus error code was returned from a Keychain API call, indicating an internal or unknown error.
 public enum KeychainError: Error {
     case dataConversionError
     case itemNotFound
@@ -16,7 +21,41 @@ public enum KeychainError: Error {
     case unhandledError(status: OSStatus)
 }
 
-/// A utility class for managing secure storage of sensitive data using the Keychain.
+/// A utility struct for managing secure storage of sensitive data using the Keychain.
+///
+/// `KeychainManager` provides static methods for securely saving, retrieving, and deleting sensitive string data
+/// in the Keychain. It is designed to simplify integration with Apple's Keychain Services, ensuring that
+/// sensitive information such as passwords, tokens, and secrets are stored securely and can be easily accessed
+/// or managed when needed. The struct handles common errors, such as data conversion issues, missing items, or unexpected
+/// data, by throwing well-defined `KeychainError` values.
+///
+/// ## Usage
+///
+/// - To save data:
+///     ```swift
+///     try KeychainManager.save(key: "com.example.token", value: "mySecretToken")
+///     ```
+/// - To retrieve data:
+///     ```swift
+///     let token = try KeychainManager.get(key: "com.example.token")
+///     ```
+/// - To delete data:
+///     ```swift
+///     try KeychainManager.delete(key: "com.example.token")
+///     ```
+///
+/// ## Error Handling
+///
+/// All methods throw `KeychainError` on failure. Use Swift's `do-catch` statements to handle errors gracefully.
+///
+/// ## Thread Safety
+///
+/// All operations are performed synchronously and are safe to call from any thread.
+///
+/// ## Security Note
+///
+/// Data stored in the Keychain is encrypted and protected by the system, making it suitable for storing secrets
+/// and other sensitive information.
 public struct KeychainManager {
 
     /// Saves a value to the Keychain for a given key.

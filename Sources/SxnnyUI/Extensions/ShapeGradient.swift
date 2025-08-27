@@ -42,6 +42,17 @@ extension ShapeStyle where Self == LinearGradient {
         )
     }
     
+    public static var greenTextGradient: LinearGradient {
+        return LinearGradient(
+            gradient: Gradient(colors: [
+                Color.green,
+                Color.green.opacity(0.6)
+            ]),
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+    }
+    
     public static var blackTextGradient: LinearGradient {
         return LinearGradient(
             gradient: Gradient(colors: [

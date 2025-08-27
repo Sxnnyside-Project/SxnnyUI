@@ -5,7 +5,6 @@
 //  Created by TI on 23/05/25.
 //
 
-import SwiftUICore
 import SwiftUI
 
 /// Un `LazyVStack` personalizado con espaciado y alineación definidos por el tema.

@@ -2,12 +2,36 @@
 //  TimeFormat.swift
 //  SxnnyUI
 //
-//  Created by TI on 31/03/25.
+//  Created by Sxnnyside Project on 31/03/25.
 //
 
 import Foundation
 
-/// A utility struct for formatting time intervals into various string representations.
+/// `TimeFormat` is a utility struct for converting time intervals into user-friendly string representations.
+/// 
+/// This struct provides a set of static formatting functions that convert time values—
+/// represented as integers or floating-point types—into formatted strings. These utilities
+/// support common formats such as "mm:ss", "hh:mm:ss", "mm:ss.SSS", and "mm:ss.SSSnnnnnnnnn",
+/// and accept times in seconds, milliseconds, or nanoseconds depending on the method used.
+///
+/// The supported formatting methods include:
+/// - `formatTime`: Converts seconds to "mm:ss" format.
+/// - `formatHourMinuteSecond`: Converts seconds to "hh:mm:ss" format.
+/// - `formatTimeMillisecond`: Converts milliseconds to "mm:ss.SSS" format.
+/// - `formatTimeNanosecond`: Converts nanoseconds to "mm:ss.SSSnnnnnnnnn" format.
+///
+/// Overloads are provided for both `BinaryInteger` and `BinaryFloatingPoint` types.
+/// The resulting strings always pad numeric components to maintain a consistent width (e.g., zero-padded minutes and seconds).
+///
+/// Usage examples:
+/// ```swift
+/// let simple = TimeFormat.formatTime(125) // "02:05"
+/// let detailed = TimeFormat.formatHourMinuteSecond(3661) // "01:01:01"
+/// let ms = TimeFormat.formatTimeMillisecond(75432) // "01:15.432"
+/// let ns = TimeFormat.formatTimeNanosecond(7543212345678) // "02:05.212345678"
+/// ```
+///
+/// This utility is useful for displaying time intervals in UI components, logs, or any feature requiring human-readable time strings.
 public struct TimeFormat {
     /// Formats a time interval into a string in "mm:ss" format.
     /// - Parameter timeInterval: The time interval to format, in seconds.

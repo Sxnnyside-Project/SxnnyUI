@@ -5,7 +5,6 @@
 //  Created by TI on 23/05/25.
 //
 
-import SwiftUICore
 import SwiftUI
 
 /// Un `LazyHStack` con espaciado y alineación por defecto, ideal para listas horizontales grandes.

@@ -2,13 +2,30 @@
 //  AlertManager.swift
 //  SxnnyUI
 //
-//  Created by Sxnnyside Proyect on 21/01/25.
+//  Created by Sxnnyside Project on 21/01/25.
 //
 
 import SwiftUI
 import Combine
 
-/// Represents the state of an alert, including its visibility and message.
+/// A structure that encapsulates the state of an alert, including its visibility, message, and type.
+///
+/// `AlertState` is used to represent the current status and content of an alert presented to the user.
+/// It stores whether the alert is currently visible, the message to be displayed within the alert,
+/// and the type of alert (such as informational, success, warning, or error).
+///
+/// You can initialize this struct with default values for a hidden, informational alert,
+/// or specify custom values for each property as needed.
+///
+/// Example usage:
+/// ```swift
+/// let errorAlert = AlertState(isShowing: true, message: "An error occurred.", type: .error)
+/// ```
+///
+/// - Parameters:
+///   - isShowing: A Boolean value indicating whether the alert should be shown.
+///   - message: The message to display within the alert.
+///   - type: The kind of alert to present, defined by the `AlertType` enum.
 public struct AlertState {
     public var isShowing: Bool
     public var message: String
@@ -29,14 +46,30 @@ public enum AlertType {
     case error
 }
 
-/// Manages the state and behavior of alerts.
+/// `AlertManager` is a class responsible for managing the presentation and dismissal of alerts within an application.
+/// 
+/// It holds an internal `AlertState` instance, which stores information about the current alert, such as its visibility,
+/// message, and type. The manager provides methods to show alerts with specific messages and types, check the current
+/// display status of an alert, and dismiss the currently shown alert. All access and mutation of the alert's state is
+/// synchronized through a dedicated serial dispatch queue to ensure thread safety.
+///
+/// Alerts presented through the `AlertManager` are intended to be observed by SwiftUI views, allowing
+/// reactive user interfaces to respond immediately to changes in alert state.
+///
+/// Example usage:
+/// ```swift
+/// let alertManager = AlertManager()
+/// alertManager.showAlert(message: "Data saved successfully!", type: .success)
+/// ```
+///
+/// - SeeAlso: `AlertState`, `AlertType`
 public final class AlertManager: ObservableObject {
     @Published private(set) var alertState: AlertState = AlertState()
-
+    
     private let queue = DispatchQueue(label: "com.example.AlertManagerQueue")
-
+    
     public init() {}
-
+    
     /// Shows an alert with a specific message and type.
     ///
     /// - Parameters:
@@ -54,7 +87,7 @@ public final class AlertManager: ObservableObject {
             return alertState.isShowing
         }
     }
-
+    
     /// Dismisses the currently displayed alert.
     public func dismissAlert() {
         queue.sync {

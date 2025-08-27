@@ -15,6 +15,8 @@ public struct FocusText<Content: View>: View {
     let content: Content
     /// The background color of the view.
     var backgroundColor: Color = .accentColor
+    /// The foreground color of the view.
+    var foregroundColor: Color = .white
     /// The corner radius of the view.
     var cornerRadius: CGFloat = 10
     /// The shadow color of the view.
@@ -41,6 +43,7 @@ public struct FocusText<Content: View>: View {
     public var body: some View {
         content
             .padding(padding)
+            .foregroundStyle(foregroundColor)
             .background(backgroundColor)
             .cornerRadius(cornerRadius)
             .shadow(color: shadowColor, radius: shadowRadius, x: 0, y: 5)
@@ -54,6 +57,15 @@ extension FocusText {
     public func backgroundColor(_ color: Color) -> FocusText {
         var copy = self
         copy.backgroundColor = color
+        return copy
+    }
+    
+    /// Sets the foreground color of the `FocusText`.
+    /// - Parameter color: The color to use for the text.
+    /// - Returns: A new `FocusText` with the updated foreground color.
+    public func foregroundColor(_ color: Color) -> FocusText {
+        var copy = self
+        copy.foregroundColor = color
         return copy
     }
 

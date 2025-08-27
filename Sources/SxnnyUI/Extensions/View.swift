@@ -25,6 +25,25 @@ public extension View {
     func animated(if condition: Bool, animation: Animation = .easeInOut(duration: 0.3)) -> some View {
         self.animation(condition ? animation : nil, value: UUID())
     }
+    
+    /// Conditional overlays another view.
+    @inlinable
+    nonisolated public func overlayIf<V>(
+        _ condition: Bool,
+        alignment: Alignment = .center,
+        @ViewBuilder content: () -> V
+    ) -> some View where V: View {
+        self.overlay(
+            Group {
+                if condition {
+                    content()
+                } else {
+                    EmptyView()
+                }
+            },
+            alignment: alignment
+        )
+    }
 }
 
 private struct HideModifier: ViewModifier {

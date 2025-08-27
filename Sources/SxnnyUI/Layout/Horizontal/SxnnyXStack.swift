@@ -5,7 +5,6 @@
 //  Created by TI on 23/05/25.
 //
 
-import SwiftUICore
 import SwiftUI
 
 /// Un `HStack` con espaciado y alineación por defecto definidos por el tema.

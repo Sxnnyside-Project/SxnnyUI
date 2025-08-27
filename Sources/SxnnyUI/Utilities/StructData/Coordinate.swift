@@ -2,13 +2,29 @@
 //  Coordinate.swift
 //  SxnnyUI
 //
-//  Created by Sxnnyside Proyect on 21/01/25.
+//  Created by Sxnnyside Project on 21/01/25.
 //
 
 import Foundation
 
 /// A data model representing a geographical coordinate with latitude and longitude.
-/// This struct is generic to support different numeric types for latitude and longitude.
+///
+/// `Coordinate` is a generic struct that can store coordinates using any numeric type that conforms to
+/// `Numeric`, `Comparable`, and `Hashable`. This allows for flexibility in precision and range (e.g., `Double`,
+/// `Float`, `Int`). It is useful for representing points on the Earth's surface or in any 2D planar system.
+///
+/// - Parameters:
+///   - T: The numeric type used for latitude and longitude (e.g., `Double`, `Float`, `Int`).
+///
+/// ## Usage Example
+/// ```swift
+/// let cityCoordinate = Coordinate<Double>(latitude: 37.7749, longitude: -122.4194)
+/// ```
+///
+/// ## Conformance
+/// `Coordinate` conforms to `Equatable` and `Hashable`, making it suitable for use in sets, dictionaries,
+/// and other collections that require these protocols.
+///
 public struct Coordinate<T: Numeric & Comparable & Hashable>: Equatable, Hashable {
     /// The latitude of the coordinate.
     public let latitude: T
@@ -24,6 +40,9 @@ public struct Coordinate<T: Numeric & Comparable & Hashable>: Equatable, Hashabl
         self.longitude = longitude
     }
     
+    /// Conforms to the `Hashable` protocol by combining the latitude and longitude values.
+    /// - Parameter hasher: The hasher to use when combining the components of this instance
+    /// into a single hash value.
     public func hash(into hasher: inout Hasher) {
         hasher.combine(latitude)
         hasher.combine(longitude)

@@ -2,11 +2,20 @@
 //  SxnnyTheme.swift
 //  SxnnyUI
 //
-//  Created by TI on 23/05/25.
+//  Created by Sxnnyside Project on 23/05/25.
 //
 
 import SwiftUI
 
+/// `SxnnyTheme` provides a centralized set of visual constants for the SxnnyUI design system.
+///
+/// Use these static properties to maintain a consistent look and feel throughout your user interface components.
+/// - `background`: The default background color, matching the system background.
+/// - `primary`: The primary brand color, used for key elements and emphasis.
+/// - `accentColor`: The accent color, typically used for interactive elements or highlights.
+/// - `defaultSpacing`: The standard spacing value for layout margins and gaps between UI elements.
+/// - `defaultPadding`: The standard padding value for component content insets.
+/// - `cornerRadius`: The standard corner radius for rounded UI components.
 public struct SxnnyTheme {
     public static let background: Color = Color(.systemBackground)
     public static let primary: Color = Color(hex: "#FFB700")

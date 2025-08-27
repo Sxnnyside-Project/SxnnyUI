@@ -7,7 +7,31 @@
 
 import Foundation
 
-/// A utility struct for formatting dates into various string representations.
+/// `DateFormat` is a utility struct for formatting `Date` instances into various string representations.
+///
+/// # Overview
+/// This struct provides static methods to transform `Date` values into strings in a variety of formats, such as:
+/// - Flat (numeric only)
+/// - Slash- or dash-separated
+/// - Including or omitting time
+/// - Extracting specific elements (year, month, day, hour)
+/// - Localized month names (short or full, with or without time)
+///
+/// # Usage
+/// Use the static methods of `DateFormat` to quickly and easily format dates for display or logging. Each method describes its output format in the documentation, e.g., `dd/MM/yyyy`, `yyyy`, etc.
+///
+/// # Localization
+/// Some methods accept an optional `Locale` parameter to format month names or dates in a localized manner. If not provided, the current locale is used.
+///
+/// # Thread Safety
+/// Each method creates its own `DateFormatter` instance to avoid thread-safety issues. For performance-critical scenarios, consider custom caching of `DateFormatter` instances.
+///
+/// # Example
+/// ```swift
+/// let now = Date()
+/// let formatted = DateFormat.formatDateWithSlash(date: now) // e.g., "27/08/2025"
+/// let monthLarge = DateFormat.formatDateMonthLarge(date: now, locale: Locale(identifier: "en_US")) // e.g., "August"
+/// ```
 public struct DateFormat {
     /// Formats a date into a flat string representation (e.g., "ddMMyyyyHHmmss").
     /// - Parameter date: The date to format.
@@ -108,6 +132,26 @@ public struct DateFormat {
         let formatter = DateFormatter()
         formatter.dateStyle = .long
         formatter.locale = locale
+        
+        let formattedDate = formatter.string(from: date)
+        
+        var components = formattedDate.components(separatedBy: " ")
+        if components.count > 2 {
+            components[2] = components[2].prefix(1).capitalized + components[2].dropFirst().lowercased()
+        }
+        
+        return components.joined(separator: " ")
+    }
+    
+    /// Formats a date into a string representing the full name of the month without day and year (e.g., "January").
+    /// - Parameters:
+    ///  - date: The date to format.
+    ///  - locale: An optional locale to use for formatting. Defaults to the current locale.
+    ///  - Returns: A string representation of the month in full name format, including the hour.
+    public static func formatDateMonthHourLarge(date: Date, locale: Locale? = nil) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .short
         
         let formattedDate = formatter.string(from: date)
         

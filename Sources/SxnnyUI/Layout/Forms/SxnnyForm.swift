@@ -5,7 +5,6 @@
 //  Created by TI on 23/05/25.
 //
 
-import SwiftUICore
 import SwiftUI
 
 /// Wrapper personalizado para `Form` que aplica estilos y configuraciones base de SxnnyUI.

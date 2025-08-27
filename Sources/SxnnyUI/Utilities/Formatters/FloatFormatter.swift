@@ -7,7 +7,21 @@
 
 import Foundation
 
-/// A custom formatter for formatting and parsing floating-point numbers.
+/// `FloatFormatter` is a custom formatter subclass of `Formatter`, designed for formatting and parsing floating-point numbers using an underlying `NumberFormatter`.
+///
+/// - The formatter is configured to use decimal style and limits the maximum number of fraction digits to two.
+/// - Use this formatter to present and interpret floating-point numbers consistently in user interfaces and data exchanges.
+///
+/// ### Initialization
+/// - `init()`: Initializes the formatter with decimal style and two maximum fraction digits.
+/// - `init?(coder:)`: Required initializer for decoding, which is not implemented and will trigger a runtime error if called.
+///
+/// ### Formatting
+/// - `string(for:)`: Returns a formatted string representation of an `NSNumber` object, or `nil` if the input is not an `NSNumber`.
+///
+/// ### Parsing
+/// - `getObjectValue(_:for:errorDescription:)`: Parses a string into a number. Returns `true` if successful and updates the referenced object; returns `false` otherwise.
+///
 public class FloatFormatter: Formatter {
     /// The underlying `NumberFormatter` used for formatting and parsing numbers.
     private let numberFormatter: NumberFormatter
